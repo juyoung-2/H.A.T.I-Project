@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.hati.trainer.mapper.TrainerMapper">
+	<resultMap id="trainerSummaryMap"
+	           type="org.hati.trainer.vo.TrainerSummaryVO">
+	
+	    <id property="trainerAccountId" column="trainer_account_id"/>
+	
+	    <result property="name" column="name"/>
+	    <result property="region" column="region"/>
+	    <result property="gender" column="gender"/>
+	    <result property="profileImage" column="profile_image"/>
+	
+	    <result property="price" column="price"/>
+	    <result property="bookmarkCount" column="bookmark_count"/>
+	    <result property="bookmarked" column="bookmarked"/>
+	</resultMap>
+	
+	<!-- 검색 전 : 인기 트레이너 가져오기 -->
+	<select id="selectPopularTrainers"
+        parameterType="org.hati.trainer.vo.TrainerSearchConditionVO"
+        resultMap="trainerSummaryMap">
+
+		SELECT
+		    a.account_id        AS trainer_account_id,
+		    up.name             AS name,
+		    up.region           AS region,
+		    up.gender           AS gender,
+		    up.profile_image    AS profile_image,
+		
+		    tpp.price           AS price,
+		
+		    COUNT(tb.trainer_account_id) AS bookmark_count,
+		
+		    CASE
+		        WHEN #{loginAccountId} IS NULL THEN 0
+		        WHEN EXISTS (
+		            SELECT 1
+		            FROM trainer_booking tb2
+		            WHERE tb2.account_id = #{loginAccountId}
+		              AND tb2.trainer_account_id = a.account_id
+		        ) THEN 1
+		        ELSE 0
+		    END AS bookmarked
+		
+			FROM accounts a
+			JOIN user_profile up
+			  ON a.account_id = up.account_id
+			JOIN trainer_pass_product tpp
+			  ON a.account_id = tpp.trainer_account_id
+			LEFT JOIN trainer_booking tb
+			  ON a.account_id = tb.trainer_account_id
+			
+			WHERE a.role_type = 'TRAINER'
+			  AND a.status = 'ACTIVE'
+			
+			GROUP BY
+			    a.account_id,
+			    up.name,
+			    up.region,
+			    up.gender,
+			    up.profile_image,
+			    tpp.price
+			
+			ORDER BY bookmark_count DESC
+			FETCH FIRST 10 ROWS ONLY
+	</select>
+	
+	<!-- 검색 전 : 맞춤 트레이너 가져오기 -->
+	<select id="selectMatchedTrainers"
+        parameterType="org.hati.trainer.vo.TrainerSearchConditionVO"
+        resultMap="trainerSummaryMap">
+
+		SELECT
+		    a.account_id      AS trainer_account_id,
+		    up.name           AS name,
+		    up.region         AS region,
+		    up.gender         AS gender,
+		    up.profile_image  AS profile_image,
+		
+		    tpp.price         AS price,
+		
+		    COUNT(tb.trainer_account_id) AS bookmark_count,
+		
+		    CASE
+		        WHEN #{loginAccountId} IS NULL THEN 0
+		        WHEN EXISTS (
+		            SELECT 1
+		            FROM trainer_booking tb2
+		            WHERE tb2.account_id = #{loginAccountId}
+		              AND tb2.trainer_account_id = a.account_id
+		        ) THEN 1
+		        ELSE 0
+		    END AS bookmarked
+		
+		FROM accounts a
+		JOIN user_profile up
+		  ON a.account_id = up.account_id
+		JOIN trainer_pass_product tpp
+		  ON a.account_id = tpp.trainer_account_id
+		LEFT JOIN trainer_booking tb
+		  ON a.account_id = tb.trainer_account_id
+		
+		WHERE a.role_type = 'TRAINER'
+		  AND a.status = 'ACTIVE'
+		
+		  /* HATI */
+		  AND up.hati_type IN
+		  <foreach collection="hatiTypes" item="h" open="(" close=")" separator=",">
+		      #{h}
+		  </foreach>
+		
+		  /* 지역 */
+		  AND up.region IN
+		  <foreach collection="regions" item="r" open="(" close=")" separator=",">
+		      #{r}
+		  </foreach>
+		
+		GROUP BY
+		    a.account_id,
+		    up.name,
+		    up.region,
+		    up.gender,
+		    up.profile_image,
+		    tpp.price
+		
+		ORDER BY bookmark_count DESC
+	</select>
+	
+	<!-- 검색 후 : 필터 + 무한스크롤 -->
+	<select id="selectTrainerList"
+        parameterType="org.hati.trainer.vo.TrainerSearchConditionVO"
+        resultMap="trainerSummaryMap">
+
+		SELECT *
+		FROM (
+		    SELECT
+		        a.account_id AS trainer_account_id,
+		        up.name,
+		        up.region,
+		        up.gender,
+		        up.profile_image,
+		        tpp.price,
+		
+		        COUNT(tb.trainer_account_id) AS bookmark_count,
+		
+		        CASE
+		            WHEN #{loginAccountId} IS NULL THEN 0
+		            WHEN EXISTS (
+		                SELECT 1
+		                FROM trainer_booking tb2
+		                WHERE tb2.account_id = #{loginAccountId}
+		                  AND tb2.trainer_account_id = a.account_id
+		            ) THEN 1
+		            ELSE 0
+		        END AS bookmarked,
+		
+		        ROW_NUMBER() OVER (
+		            <choose>
+		                <when test="priceOrder == 'low'">
+		                    ORDER BY tpp.price ASC
+		                </when>
+		                <when test="priceOrder == 'high'">
+		                    ORDER BY tpp.price DESC
+		                </when>
+		                <otherwise>
+		                    ORDER BY COUNT(tb.trainer_account_id) DESC
+		                </otherwise>
+		            </choose>
+		        ) rn
+		
+		    FROM accounts a
+		    JOIN user_profile up ON a.account_id = up.account_id
+		    JOIN trainer_pass_product tpp ON a.account_id = tpp.trainer_account_id
+		    LEFT JOIN trainer_booking tb ON a.account_id = tb.trainer_account_id
+		
+		    WHERE a.role_type = 'TRAINER'
+		      AND a.status = 'ACTIVE'
+		
+		    <if test="gender != null">
+		        AND up.gender = #{gender}
+		    </if>
+		
+		    <if test="bookmarkedOnly == true">
+		        AND EXISTS (
+		            SELECT 1
+		            FROM trainer_booking tb3
+		            WHERE tb3.account_id = #{loginAccountId}
+		              AND tb3.trainer_account_id = a.account_id
+		        )
+		    </if>
+		
+		    GROUP BY
+		        a.account_id,
+		        up.name,
+		        up.region,
+		        up.gender,
+		        up.profile_image,
+		        tpp.price
+		)
+		WHERE rn &gt; #{offset}
+		  AND rn &lt;= #{offset} + #{limit}
+	</select>
+	
+	<!-- 찜(북마크)상태를 확인하는 쿼리 -->
+	<select id="existsTrainerBookmark" resultType="int">
+	    SELECT COUNT(*)
+	    FROM trainer_bookmark
+	    WHERE account_id = #{accountId}
+	      AND trainer_account_id = #{trainerAccountId}
+	</select>
+	
+	
+</mapper>

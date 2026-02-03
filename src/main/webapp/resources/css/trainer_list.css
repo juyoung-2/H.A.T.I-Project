@@ -1,0 +1,521 @@
+/* trainer-list.css */
+html, body{
+  height: 100%;
+  background: var(--bg);
+}
+:root{
+  --bg: #F0F2F5;
+  --text: #050505;
+  --sub: #606770;
+  --border: #E4E6EB;
+  --primary: #1877F2;
+  --danger: #FF0000;
+
+  --card-bg: #FFFFFF;
+  --radius: 12px;
+  
+  --surface: #EEF1F4;     /* 입력/버튼용 연회색 */
+  --surface-hover: #E9EDF1;
+}
+
+.trainer-page{
+  min-height: 100%;
+  background: var(--bg);
+}
+
+.trainer-container{
+  max-width: 896px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.trainer-header{
+  margin-bottom: 24px;
+}
+
+.trainer-title{
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--text);
+  margin: 0 0 16px 0;
+}
+
+/* ===== Search bar ===== */
+.trainer-searchbar{
+  width: 100%;
+  display: block;
+}
+
+.search-icon{
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--sub);
+  font-size: 18px;
+  
+}
+
+/* input 자체는 박스 안에서 border 제거 */
+.search-input{
+  width: 100%;
+  height: 52px;
+  border: 0 !important;
+  outline: none;
+  border-radius: 14px;
+  padding: 0 14px 0 44px;
+  background: transparent;
+  font-size: 15px;
+}
+
+.search-input::placeholder{
+  color: var(--sub);
+}
+
+.filter-open-btn{
+  height: 44px;
+  padding: 0 14px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: #fff;
+  color: var(--text);
+  cursor: pointer;
+}
+
+/* ===== Filter (details) ===== */
+.filter-box{
+  width: 100%;
+  border: 1px solid var(--border);
+  background: #fff;
+  border-radius: 12px;
+  padding: 10px 12px;
+}
+
+.filter-summary{
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--sub);
+  font-weight: 600;
+}
+
+.filter-box summary::-webkit-details-marker{ display: none; }
+
+.filter-panel{
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.filter-section .filter-title{
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+
+.filter-row{
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.filter-grid{
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+/* chips */
+.chip-check,
+.chip-radio{
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--border);
+  padding: 8px 10px;
+  border-radius: 999px;
+  cursor: pointer;
+  user-select: none;
+  color: var(--text);
+  background: #fff;
+  font-size: 13px;
+}
+
+.chip-check input,
+.chip-radio input{
+  accent-color: var(--primary);
+}
+
+/* Filter actions */
+.filter-actions{
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  padding-top: 8px;
+}
+
+.btn-outline{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  padding: 0 14px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: #fff;
+  color: var(--sub);
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn-primary{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  padding: 0 14px;
+  border-radius: 12px;
+  border: 1px solid var(--primary);
+  background: var(--primary);
+  color: #fff;
+  cursor: pointer;
+}
+
+/* ===== Sections ===== */
+.section{
+  margin-top: 24px;
+}
+
+.section-title{
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0 0 12px 0;
+}
+
+/* profile grid (3 columns like TSX) */
+.trainer-grid{
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+@media (max-width: 900px){
+  .trainer-grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 560px){
+  .trainer-grid{ grid-template-columns: 1fr; }
+}
+
+/* info list */
+.trainer-list{
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ===== Cards ===== */
+.trainer-card{
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 18px;
+  border: 1px solid rgba(0,0,0,0.03);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+  transition: box-shadow .15s ease;
+}
+
+.trainer-card:hover{
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+}
+
+.avatar{
+  border-radius: 999px;
+  background: var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--sub);
+}
+
+.avatar-lg{
+  width: 120px;
+  height: 120px;
+  margin: 0 auto 12px auto;
+  font-size: 40px;
+}
+
+.avatar-sm{
+  width: 56px;
+  height: 56px;
+  font-size: 22px;
+}
+
+.trainer-name{
+  text-align: center;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+
+.badge-wrap{
+  display: flex;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
+.meta{
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  color: var(--sub);
+  font-size: 13px;
+  margin-bottom: 10px;
+}
+
+.price{
+  display: flex;
+  justify-content: center;
+  color: var(--primary);
+  font-weight: 800;
+  margin-bottom: 12px;
+}
+
+.card-actions{
+  display: flex;
+  gap: 8px;
+}
+
+/* ===== Info Row ===== */
+.trainer-row{
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 14px;
+  border: 1px solid rgba(0,0,0,0.03);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+  display: flex;
+  gap: 12px;
+}
+
+.row-main{ flex: 1; }
+
+.row-top{
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.trainer-name-sm{
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+
+.row-price{
+  color: var(--primary);
+  font-weight: 800;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.row-bio{
+  color: var(--sub);
+  font-size: 13px;
+  line-height: 1.4;
+  margin-bottom: 10px;
+
+  /* line-clamp 2 */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.row-bottom{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.btn-sm{
+  height: 32px;
+  padding: 0 10px;
+  border-radius: 10px;
+}
+
+/* ===== HMBTI Badge (TSX inline-color → CSS 클래스화) ===== */
+.hmbti-badge{
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-weight: 800;
+  font-size: 12px;
+}
+
+/* HMBTI color mapping from HMBTIBadge.tsx */
+.hmbti-HFIT{ color:#FF6B6B; background:#FFE5E5; }
+.hmbti-HCAL{ color:#4ECDC4; background:#E0F7F5; }
+.hmbti-HSTR{ color:#FF8C42; background:#FFE8DB; }
+.hmbti-HYOG{ color:#A78BFA; background:#EDE9FE; }
+.hmbti-HSPO{ color:#10B981; background:#D1FAE5; }
+.hmbti-HOUT{ color:#059669; background:#D1FAE5; }
+.hmbti-HSWM{ color:#3B82F6; background:#DBEAFE; }
+.hmbti-HMIX{ color:#8B5CF6; background:#EDE9FE; }
+
+/* empty */
+.empty-state{
+  width: 100%;
+  padding: 28px 16px;
+  text-align: center;
+  color: var(--sub);
+  background: rgba(255,255,255,0.7);
+  border: 1px dashed var(--border);
+  border-radius: 14px;
+}
+/* 모달 숨김 */
+.no-scroll{ overflow:hidden; }
+
+.modal{ position:fixed; inset:0; display:none; z-index:9999; }
+.modal.is-open{ display:block; }
+
+.modal-overlay{ position:absolute; inset:0; background:rgba(0,0,0,0.45); }
+
+.modal-panel{
+  position:relative;
+  width:min(720px, calc(100vw - 24px));
+  max-height:calc(100vh - 24px);
+  margin:12px auto;
+  background:#fff;
+  border-radius:16px;
+  border:1px solid rgba(0,0,0,0.06);
+  box-shadow:0 12px 36px rgba(0,0,0,0.18);
+  display:flex;
+  flex-direction:column;
+}
+.modal-header{ padding:14px 16px; display:flex; justify-content:space-between; border-bottom:1px solid var(--border); }
+.modal-body{ padding:16px; overflow:auto; }
+.modal-footer{ padding:12px 16px 16px; display:flex; gap:8px; justify-content:flex-end; border-top:1px solid var(--border); }
+/* 검색줄 한 줄 고정 */
+.trainer-searchbar{ 
+	width:100%;
+	display:block;
+	 }
+
+
+/* 아이콘 버튼이 절대 찌그러지지 않게  */ 
+.filter-icon-btn{
+  flex: 0 0 52px;
+  width:52px;
+  height:52px;
+  border-radius:12px;
+  border:1px solid var(--border);
+  background:#fff;
+  cursor:pointer;
+
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+
+  font-size:18px;
+  line-height:1;
+  color: var(--sub);
+  
+  font-family: "Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif;
+}
+
+/* 버튼 박스 스타일 */
+.searchbar-row{
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  background: transparent !important;
+  border: 0 !important;
+  padding: 0 !important;
+}
+
+/* input에 포커스가 들어오면 부모 박스가 파랗게 */
+.search-input-wrap:focus-within{
+  border-color: #1877F2 !important;
+  box-shadow: 0 0 0 3px rgba(24, 119, 242, 0.25) !important;
+}
+
+
+/* 버튼 내부 텍스트 대신 pseudo-element로 아이콘 표시 */
+#openFilterBtn{
+  position: relative;
+  font-size: 0 !important;     /* 혹시 전역 텍스트 규칙이 섞여도 무력화 */
+  line-height: 0 !important;
+}
+
+/* 너가 쓰던 ::before 아이콘 찍기 유지 */
+#openFilterBtn::before{
+  content: "\2699\FE0F"; /* ⚙️ */
+  font-size: 18px;
+  line-height: 1;
+  display: block;
+  font-family: "Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif;
+}
+
+  /* 폰트 우선순위 */
+  font-family: "Segoe UI Symbol","Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif;
+}
+/* ✅ 필터 버튼: 검색창과 분리된 사각 버튼 */
+.filter-btn{
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: #fff;
+  cursor: pointer;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #606770;
+}
+
+.filter-btn:hover{
+  background: rgba(0,0,0,0.03);
+}
+
+.filter-gear{
+  font-size: 18px;
+  line-height: 1;
+}
+/* ===== 검색창/필터 버튼 톤 통일(흰색 → 연회색) ===== */
+
+/* 검색 input 박스(겉 박스) */
+.search-input-wrap{
+  position: relative;
+  flex: 1;
+  min-width: 0;
+
+  background: var(--surface);
+  border: 2px solid transparent;     /* ✅ 크기 안 변하게 */
+  border-radius: 12px;
+  box-shadow: none;
+}
+
+/* 필터 버튼(분리된 박스) */
+.filter-btn,
+.filter-icon-btn{  /* 둘 중 어떤 클래스를 쓰든 적용되게 */
+  background: var(--surface) !important;
+  border-color: rgba(0,0,0,0.06) !important;
+  color: var(--sub) !important;
+}
+
+/* 호버 */
+.filter-btn:hover,
+.filter-icon-btn:hover{
+  background: var(--surface-hover) !important;
+}

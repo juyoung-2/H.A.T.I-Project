@@ -1,0 +1,348 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%-- 
+	  필요 Model 예시:
+	  - trainers : List<TrainerVO> (검색 결과)
+	  - popularTrainers : List<TrainerVO> (인기 트레이너)
+	  - customizedTrainers : List<TrainerVO> (맞춤 트레이너)
+	  - loginUser : (선택) 사용자 정보 (맞춤 추천에 필요)
+	--%>
+<c:set var="viewMode" value="${empty param.viewMode ? 'profile' : param.viewMode}" />
+<c:set var="hasSearch" value="${not empty param.q}" />
+<c:set var="hasFilter"
+       value="${not empty param.priceSort
+              or not empty paramValues.hmbti
+              or not empty paramValues.district
+              or not empty paramValues.gender}" />
+<c:set var="showRecommend" value="${not hasSearch and not hasFilter}" />
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="<c:url value='/resources/css/trainer_list.css'/>" />
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div class="trainer-page">
+  <div class="trainer-container">
+
+    <div class="trainer-header">
+      <h2 class="trainer-title">트레이너 찾기</h2>
+
+      <form class="trainer-searchbar" method="get" action="<c:url value='/trainer'/>">
+        <input type="hidden" name="viewMode" value="${viewMode}" />
+
+		<div class="searchbar-row">
+		<!-- 검색창 박스(독립) -->
+        <div class="search-input-wrap">
+          <span class="search-icon" aria-hidden="true">🔍</span>
+          
+          <input
+            class="search-input"
+            type="text"
+            name="q"
+            value="${fn:escapeXml(param.q)}"
+            placeholder="트레이너 검색..."
+          />
+        </div>
+ 		<!-- 필터 버튼(독립) -->
+		<!-- 오른쪽  필터 아이콘 버튼: 클릭 시 모달 open -->
+        <button class="filter-icon-btn" type="button" id="openFilterBtn" title="필터" aria-label="필터"></button>
+
+		</div>
+	 </form>
+	 
+	 <!-- =========================
+                                    필터 모달
+     ========================= -->
+	<div class="modal" id="filterModal" aria-hidden="true">
+	  <div class="modal-overlay" id="filterOverlay"></div>
+	
+	  <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="filterTitle" tabindex="-1">
+	    <div class="modal-header">
+	      <h3 class="modal-title" id="filterTitle">필터</h3>
+	      <button type="button" class="icon-btn" id="closeFilterBtn" aria-label="닫기">✕</button>
+	    </div>
+	
+	    <!-- ✅ 필터 전용 GET form -->
+	    <form method="get" action="<c:url value='/trainer'/>" class="modal-body">
+	      <!-- 검색어 유지 -->
+	      <input type="hidden" name="q" value="${fn:escapeXml(param.q)}" />
+	
+	      <!-- ✅ 여기로 "기존 filter-panel"을 그대로 붙여넣기 -->
+	      <div class="filter-panel">
+	        <!-- 아래 내용: 네가 준 filter-section들 그대로 -->
+	        <%-- 보기 방식 --%>
+	        <div class="filter-section">
+	          <div class="filter-title">보기 방식</div>
+	          <div class="filter-row">
+	            <label class="chip-radio">
+	              <input type="radio" name="viewMode" value="profile"
+	                     <c:if test="${viewMode eq 'profile'}">checked</c:if> />
+	              <span>프로필 카드</span>
+	            </label>
+	            <label class="chip-radio">
+	              <input type="radio" name="viewMode" value="info"
+	                     <c:if test="${viewMode eq 'info'}">checked</c:if> />
+	              <span>정보 보기</span>
+	            </label>
+	          </div>
+	        </div>
+	
+	        <%-- 금액 정렬 --%>
+	        <div class="filter-section">
+	          <div class="filter-title">금액</div>
+	          <div class="filter-row">
+	            <label class="chip-radio">
+	              <input type="radio" name="priceSort" value="low"
+	                     <c:if test="${param.priceSort eq 'low'}">checked</c:if> />
+	              <span>저가순</span>
+	            </label>
+	            <label class="chip-radio">
+	              <input type="radio" name="priceSort" value="high"
+	                     <c:if test="${param.priceSort eq 'high'}">checked</c:if> />
+	              <span>고가순</span>
+	            </label>
+	            <label class="chip-radio">
+	              <input type="radio" name="priceSort" value=""
+	                     <c:if test="${empty param.priceSort}">checked</c:if> />
+	              <span>추천순(기본)</span>
+	            </label>
+	          </div>
+	        </div>
+	
+	        <%-- HMBTI --%>
+	        <div class="filter-section">
+	          <div class="filter-title">HMBTI</div>
+	          <div class="filter-grid">
+	            <c:set var="hmbtiJoined" value="${fn:join(paramValues.hmbti, ',')}" />
+	            <c:forEach var="t" items="${fn:split('HFIT,HCAL,HSTR,HYOG,HSPO,HOUT,HSWM,HMIX', ',')}">
+	              <label class="chip-check">
+	                <input type="checkbox" name="hmbti" value="${t}"
+	                       <c:if test="${fn:contains(hmbtiJoined, t)}">checked</c:if> />
+	                <span class="hmbti-badge hmbti-${t}">${t}</span>
+	              </label>
+	            </c:forEach>
+	          </div>
+	        </div>
+	
+	        <%-- 지역 --%>
+	        <div class="filter-section">
+	          <div class="filter-title">지역(구)</div>
+	          <div class="filter-grid">
+	            <c:set var="districtJoined" value="${fn:join(paramValues.district, ',')}" />
+	            <c:forEach var="d" items="${fn:split('강남구,강동구,강북구,강서구,관악구,광진구,구로구,금천구,노원구,도봉구,동대문구,동작구,마포구,서대문구,서초구,성동구,성북구,송파구,양천구,영등포구,용산구,은평구,종로구,중구,중랑구', ',')}">
+	              <label class="chip-check">
+	                <input type="checkbox" name="district" value="${d}"
+	                       <c:if test="${fn:contains(districtJoined, d)}">checked</c:if> />
+	                <span>${d}</span>
+	              </label>
+	            </c:forEach>
+	          </div>
+	        </div>
+	
+	        <%-- 성별 --%>
+	        <div class="filter-section">
+	          <div class="filter-title">성별</div>
+	          <div class="filter-row">
+	            <c:set var="genderJoined" value="${fn:join(paramValues.gender, ',')}" />
+	            <label class="chip-check">
+	              <input type="checkbox" name="gender" value="남자"
+	                     <c:if test="${fn:contains(genderJoined, '남자')}">checked</c:if> />
+	              <span>남자</span>
+	            </label>
+	            <label class="chip-check">
+	              <input type="checkbox" name="gender" value="여자"
+	                     <c:if test="${fn:contains(genderJoined, '여자')}">checked</c:if> />
+	              <span>여자</span>
+	            </label>
+	          </div>
+	        </div>
+	
+	        <!-- ✅ 기존 filter-actions는 모달 footer로 옮길거라 여기서는 제거해도 됨 -->
+	      </div>
+	
+	      <div class="modal-footer">
+	        <a class="btn-outline" href="<c:url value='/trainer'/>">초기화</a>
+	        <button type="button" class="btn-outline" id="closeFilterBtn2">닫기</button>
+	        <button type="submit" class="btn-primary">적용</button>
+	      </div>
+	    </form>
+	  </div>
+	</div>
+	 
+	 
+	 
+    </div>
+
+    <%-- =========================
+         추천 섹션(검색/필터 없을 때)
+         ========================= --%>
+    <c:if test="${showRecommend}">
+      <div class="section">
+        <h3 class="section-title">인기 트레이너</h3>
+
+        <div class="${viewMode eq 'profile' ? 'trainer-grid' : 'trainer-list'}">
+          <c:forEach var="tr" items="${popularTrainers}">
+            <c:choose>
+              <c:when test="${viewMode eq 'profile'}">
+                <div class="trainer-card">
+                  <div class="avatar avatar-lg">👤</div>
+                  <div class="trainer-name">${fn:escapeXml(tr.name)}</div>
+                  <div class="badge-wrap">
+                    <span class="hmbti-badge hmbti-${tr.hmbti}">${tr.hmbti}</span>
+                  </div>
+                  <div class="meta">
+                    <span class="meta-item">📍 ${tr.location}</span>
+                  </div>
+                  <div class="price">
+                    💰 ${tr.price}원/회
+                  </div>
+                  <div class="card-actions">
+                    <button type="button" class="btn-outline">찜하기</button>
+                  </div>
+                </div>
+              </c:when>
+              <c:otherwise>
+                <div class="trainer-row">
+                  <div class="avatar avatar-sm">👤</div>
+                  <div class="row-main">
+                    <div class="row-top">
+                      <div>
+                        <div class="trainer-name-sm">${fn:escapeXml(tr.name)}</div>
+                        <span class="hmbti-badge hmbti-${tr.hmbti}">${tr.hmbti}</span>
+                      </div>
+                      <div class="row-price">💰 ${tr.price}원</div>
+                    </div>
+                    <div class="row-bio">${fn:escapeXml(tr.bio)}</div>
+                    <div class="row-bottom">
+                      <span class="meta-item">📍 ${tr.location}</span>
+                      <button type="button" class="btn-outline btn-sm">찜</button>
+                    </div>
+                  </div>
+                </div>
+              </c:otherwise>
+            </c:choose>
+          </c:forEach>
+        </div>
+      </div>
+
+      <div class="section">
+        <h3 class="section-title">
+          <c:out value="${loginUser.nickname != null ? loginUser.nickname : '사용자'}"/>님을 위한 맞춤 트레이너
+        </h3>
+
+        <div class="${viewMode eq 'profile' ? 'trainer-grid' : 'trainer-list'}">
+          <c:forEach var="tr" items="${customizedTrainers}">
+            <%-- 위와 동일한 카드/row 렌더링 재사용 가능(실무에선 include 추천) --%>
+            <c:choose>
+              <c:when test="${viewMode eq 'profile'}">
+                <div class="trainer-card">
+                  <div class="avatar avatar-lg">👤</div>
+                  <div class="trainer-name">${fn:escapeXml(tr.name)}</div>
+                  <div class="badge-wrap">
+                    <span class="hmbti-badge hmbti-${tr.hmbti}">${tr.hmbti}</span>
+                  </div>
+                  <div class="meta">
+                    <span class="meta-item">📍 ${tr.location}</span>
+                  </div>
+                  <div class="price">💰 ${tr.price}원/회</div>
+                  <div class="card-actions">
+                    <button type="button" class="btn-outline">찜하기</button>
+                  </div>
+                </div>
+              </c:when>
+              <c:otherwise>
+                <div class="trainer-row">
+                  <div class="avatar avatar-sm">👤</div>
+                  <div class="row-main">
+                    <div class="row-top">
+                      <div>
+                        <div class="trainer-name-sm">${fn:escapeXml(tr.name)}</div>
+                        <span class="hmbti-badge hmbti-${tr.hmbti}">${tr.hmbti}</span>
+                      </div>
+                      <div class="row-price">💰 ${tr.price}원</div>
+                    </div>
+                    <div class="row-bio">${fn:escapeXml(tr.bio)}</div>
+                    <div class="row-bottom">
+                      <span class="meta-item">📍 ${tr.location}</span>
+                      <button type="button" class="btn-outline btn-sm">찜</button>
+                    </div>
+                  </div>
+                </div>
+              </c:otherwise>
+            </c:choose>
+          </c:forEach>
+        </div>
+      </div>
+    </c:if>
+
+    <%-- =========================
+         검색 결과 섹션(검색/필터 있을 때)
+         ========================= --%>
+    <c:if test="${not showRecommend}">
+      <div class="section">
+        <h3 class="section-title">
+          검색 결과 (<c:out value="${fn:length(trainers)}"/>명)
+        </h3>
+
+        <div class="${viewMode eq 'profile' ? 'trainer-grid' : 'trainer-list'}">
+          <c:forEach var="tr" items="${trainers}">
+            <c:choose>
+              <c:when test="${viewMode eq 'profile'}">
+                <div class="trainer-card">
+                  <div class="avatar avatar-lg">👤</div>
+                  <div class="trainer-name">${fn:escapeXml(tr.name)}</div>
+                  <div class="badge-wrap">
+                    <span class="hmbti-badge hmbti-${tr.hmbti}">${tr.hmbti}</span>
+                  </div>
+                  <div class="meta">
+                    <span class="meta-item">📍 ${tr.location}</span>
+                    <span class="meta-item">· ${tr.gender}</span>
+                  </div>
+                  <div class="price">💰 ${tr.price}원/회</div>
+                  <div class="card-actions">
+                    <button type="button" class="btn-outline">찜하기</button>
+                  </div>
+                </div>
+              </c:when>
+              <c:otherwise>
+                <div class="trainer-row">
+                  <div class="avatar avatar-sm">👤</div>
+                  <div class="row-main">
+                    <div class="row-top">
+                      <div>
+                        <div class="trainer-name-sm">${fn:escapeXml(tr.name)}</div>
+                        <span class="hmbti-badge hmbti-${tr.hmbti}">${tr.hmbti}</span>
+                      </div>
+                      <div class="row-price">💰 ${tr.price}원</div>
+                    </div>
+                    <div class="row-bio">${fn:escapeXml(tr.bio)}</div>
+                    <div class="row-bottom">
+                      <span class="meta-item">📍 ${tr.location}</span>
+                      <span class="meta-item">· ${tr.gender}</span>
+                      <button type="button" class="btn-outline btn-sm">찜</button>
+                    </div>
+                  </div>
+                </div>
+              </c:otherwise>
+            </c:choose>
+          </c:forEach>
+
+          <c:if test="${empty trainers}">
+            <div class="empty-state">
+              조건에 맞는 트레이너가 없습니다.
+            </div>
+          </c:if>
+        </div>
+      </div>
+    </c:if>
+
+  </div>
+</div>
+	
+	
+</body>
+</html>
