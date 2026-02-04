@@ -34,8 +34,8 @@ html, body{
 }
 
 .trainer-title{
-  font-size: 24px;
-  font-weight: 800;
+  font-size: 31px;
+  font-weight: 700;
   color: var(--text);
   margin: 0 0 16px 0;
 }
@@ -53,7 +53,7 @@ html, body{
   transform: translateY(-50%);
   color: var(--sub);
   font-size: 18px;
-  
+   pointer-events: none;  /* ✅ 클릭 통과 */
 }
 
 /* input 자체는 박스 안에서 border 제거 */
@@ -126,23 +126,7 @@ html, body{
 .filter-grid{
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 8px;
-}
-
-/* chips */
-.chip-check,
-.chip-radio{
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  border: 1px solid var(--border);
-  padding: 8px 10px;
-  border-radius: 999px;
-  cursor: pointer;
-  user-select: none;
-  color: var(--text);
-  background: #fff;
-  font-size: 13px;
+  gap: 3px;
 }
 
 .chip-check input,
@@ -191,8 +175,8 @@ html, body{
 }
 
 .section-title{
-  font-size: 20px;
-  font-weight: 700;
+  font-size: 23px;
+  font-weight: 600;
   color: var(--text);
   margin: 0 0 12px 0;
 }
@@ -352,11 +336,7 @@ html, body{
 
 /* ===== HMBTI Badge (TSX inline-color → CSS 클래스화) ===== */
 .hmbti-badge{
-  display: inline-flex;
-  align-items: center;
-  border-radius: 999px;
-  padding: 6px 10px;
-  font-weight: 800;
+  font-weight: 500;   /* 400~600 사이로 취향 조절 */
   font-size: 12px;
 }
 
@@ -383,7 +363,12 @@ html, body{
 /* 모달 숨김 */
 .no-scroll{ overflow:hidden; }
 
-.modal{ position:fixed; inset:0; display:none; z-index:9999; }
+.modal{ 
+	position:fixed; 
+	inset:0; 
+	display:none; 
+	z-index:9999; 
+	}
 .modal.is-open{ display:block; }
 
 .modal-overlay{ position:absolute; inset:0; background:rgba(0,0,0,0.45); }
@@ -397,18 +382,34 @@ html, body{
   border-radius:16px;
   border:1px solid rgba(0,0,0,0.06);
   box-shadow:0 12px 36px rgba(0,0,0,0.18);
-  display:flex;
-  flex-direction:column;
+  overflow-y:auto;
 }
-.modal-header{ padding:14px 16px; display:flex; justify-content:space-between; border-bottom:1px solid var(--border); }
-.modal-body{ padding:16px; overflow:auto; }
-.modal-footer{ padding:12px 16px 16px; display:flex; gap:8px; justify-content:flex-end; border-top:1px solid var(--border); }
+.modal-header{ 
+  padding:14px 16px; 
+  display:flex; 
+  justify-content:space-between; 
+  border-bottom:1px solid var(--border);
+  flex:0 0 auto; /* 헤더 고정 */ 
+  }
+  
+.modal-body{ 
+	padding:16px; 
+	}
+	
+.modal-footer{ 
+	padding:12px 16px 16px; 
+	display:flex; 
+	gap:8px; 
+	justify-content:flex-end; 
+	border-top:1px solid var(--border);
+	flex:0 0 auto; /* 푸터 고정 */ 
+	}
+	
 /* 검색줄 한 줄 고정 */
 .trainer-searchbar{ 
 	width:100%;
 	display:block;
 	 }
-
 
 /* 아이콘 버튼이 절대 찌그러지지 않게  */ 
 .filter-icon-btn{
@@ -430,6 +431,22 @@ html, body{
   
   font-family: "Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif;
 }
+/* 버튼 내부 텍스트 대신 pseudo-element로 아이콘 표시 */
+#openFilterBtn{
+  position: relative;
+  font-size: 0 !important;     /* 혹시 전역 텍스트 규칙이 섞여도 무력화 */
+  line-height: 0 !important;
+}
+
+/* 너가 쓰던 ::before 아이콘 찍기 유지 */
+#openFilterBtn::before{
+  content: "\2699\FE0F"; /* ⚙️ */
+  font-size: 18px;
+  line-height: 1;
+  display: block;
+  font-family: "Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif;
+}
+
 
 /* 버튼 박스 스타일 */
 .searchbar-row{
@@ -448,26 +465,7 @@ html, body{
   box-shadow: 0 0 0 3px rgba(24, 119, 242, 0.25) !important;
 }
 
-
-/* 버튼 내부 텍스트 대신 pseudo-element로 아이콘 표시 */
-#openFilterBtn{
-  position: relative;
-  font-size: 0 !important;     /* 혹시 전역 텍스트 규칙이 섞여도 무력화 */
-  line-height: 0 !important;
-}
-
-/* 너가 쓰던 ::before 아이콘 찍기 유지 */
-#openFilterBtn::before{
-  content: "\2699\FE0F"; /* ⚙️ */
-  font-size: 18px;
-  line-height: 1;
-  display: block;
-  font-family: "Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif;
-}
-
-  /* 폰트 우선순위 */
-  font-family: "Segoe UI Symbol","Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif;
-}
+  
 /* ✅ 필터 버튼: 검색창과 분리된 사각 버튼 */
 .filter-btn{
   width: 44px;
@@ -518,4 +516,186 @@ html, body{
 .filter-btn:hover,
 .filter-icon-btn:hover{
   background: var(--surface-hover) !important;
+}
+
+/* 검색창 아래 라디오 줄 */
+/* ====== ViewMode 라디오 줄 ====== */
+.viewmode-row{
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  gap: 22px;                /* 프로필 위주 ↔ 정보 위주 간격 */
+  background: transparent;
+  border: 0;
+  padding: 0;
+  box-shadow: none;
+}
+
+/* ====== 라벨(칩) ====== */
+.vm-chip{
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+
+  background: transparent;
+  border: 0;
+  padding: 0;
+  box-shadow: none;
+  border-radius: 0;
+
+  font-size: 16px;
+  color: var(--text) !important;
+}
+
+/* ✅ 흰색 라디오 원(기본 라디오) 자체를 완전 숨김 */
+.vm-chip input[type="radio"]{
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ✅ 텍스트 왼쪽에 파란 점 자리 확보 */
+.vm-chip span{
+  position: relative;
+  padding-left: 16px;  /* 점 자리 */
+}
+
+/* 기본은 점 안 보이게 */
+.vm-chip span::before{
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  transform: translateY(-50%);
+  background: transparent;
+}
+
+/* ✅ 선택된 것만 파란 점 보이게 */
+.vm-chip input[type="radio"]:checked + span::before{
+  background: var(--primary);
+}
+
+/* (선택) 선택된 텍스트도 살짝 강조 */
+.vm-chip input[type="radio"]:checked + span{
+  font-weight: inherit;
+}
+
+/* ✅ 체크박스 항목이 많을 때: 박스 안에서 스크롤 */
+.filter-scroll{
+  max-height: 220px;      /* 원하는 높이로 조절 */
+  overflow-y: auto;
+  padding-right: 6px;     /* 스크롤바 때문에 줄 깨짐 방지 */
+}
+
+/* 3행만 보이게: (칩높이 44px * 3) + (행간격 8px * 2) */
+.filter-scroll.rows-3{
+  max-height: calc(46px * 3 + 8px * 2);
+  overflow-y: auto;
+}
+
+/* 스크롤바(크롬/엣지) 살짝 예쁘게 */
+.filter-scroll::-webkit-scrollbar{
+  width: 8px;
+}
+.filter-scroll::-webkit-scrollbar-thumb{
+  background: rgba(0,0,0,0.18);
+  border-radius: 999px;
+}
+.filter-scroll::-webkit-scrollbar-track{
+  background: transparent;
+}
+
+/* ✅ 내용이 많을 때 3열 유지(너 기존 grid 유지용) */
+.filter-grid{
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+
+/* chips */
+.chip-check,
+.chip-radio{
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--border);
+  padding: 8px 10px;
+  border-radius: 999px;
+  cursor: pointer;
+  user-select: none;
+  color: var(--text);
+  background: #fff;
+  font-size: 18px;
+}
+
+/* 칩(체크/라디오) 높이 고정: 3행 계산을 정확히 하기 위해 */
+.chip-check,
+.chip-radio{
+  min-height: 34px;      /* 필요하면 42~48로 조절 */
+  padding: 6px 10px;
+  border-width: 1px;         /* 테두리 얇게 */
+  border-radius: 12px;       /* 999px(알약) → 12px(덜 둥글게) */
+  font-size: 13px;
+}
+
+.chip-check span,
+.chip-radio span {
+  font-size: 16px; /* 글자만 키움 */
+  font-weight: 400; 
+}
+
+
+/* ✅ 정렬/금액/성별: 박스 제거하고 텍스트처럼 보이게 */
+.filter-row--plain .chip-radio,
+.filter-row--plain .chip-check{
+  border: 0 !important;
+  background: transparent !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  font-size: 15px;
+}
+
+/* 간격만 예쁘게 */
+.filter-row--plain{
+  gap: 18px;
+  font-size: 18px;
+}
+
+.filter-row.filter-row--plain {
+  display: flex;
+  flex-direction: column; /* 세로 배치 */
+  gap: 3px;               /* 라벨 사이 간격 */
+}
+
+.plain-radio {
+   display: inline-flex;     /* 줄 간격 줄고 정렬도 깔끔 */
+  align-items: center;
+  margin: 0;                /* 핵심 */
+  line-height: 1.2;         /* (선택) 더 타이트하게 */
+}
+
+/* ✅ HMBTI/지역 스크롤 박스 안 텍스트만 줄이기 */
+.filter-scroll--hmbti .chip-check,
+.filter-scroll--hmbti .chip-radio,
+.filter-scroll--district .chip-check,
+.filter-scroll--district .chip-radio {
+  font-size: 13px;   /* ← 여기 숫자만 취향대로 12~14 */
+}
+
+.filter-scroll--hmbti .chip-check span,
+.filter-scroll--district .chip-check span {
+  font-size: 13px;
+}
+
+/* (선택) 체크박스 크기도 덩달아 커 보이면 */
+.filter-scroll--hmbti input,
+.filter-scroll--district input{
+  transform: scale(0.95);
 }
