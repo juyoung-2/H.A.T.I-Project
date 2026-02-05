@@ -21,6 +21,8 @@
 <html>
 <head>
 <link rel="stylesheet" href="<c:url value='/resources/css/trainer_list.css'/>" />
+<link rel="stylesheet" href="<c:url value='/resources/css/trainerCard.css'/>" />
+<link rel="stylesheet" href="<c:url value='/resources/css/trainerRow.css'/>" />
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
@@ -32,7 +34,6 @@
       <h2 class="trainer-title">트레이너 찾기</h2>
 
       <form class="trainer-searchbar" method="get" action="<c:url value='/trainer'/>">
-        <input type="hidden" name="viewMode" value="${viewMode}" />
 
 		<div class="searchbar-row">
 		<!-- 검색창 박스(독립) -->
@@ -266,49 +267,12 @@
     <c:if test="${showRecommend}">
       <div class="section">
         <h3 class="section-title">인기 트레이너</h3>
-
+		
         <div class="${viewMode eq 'profile' ? 'trainer-grid' : 'trainer-list'}">
-          <c:forEach var="tr" items="${popularTrainers}">
-            <c:choose>
-              <c:when test="${viewMode eq 'profile'}">
-                <div class="trainer-card">
-                  <div class="avatar avatar-lg">👤</div>
-                  <div class="trainer-name">${fn:escapeXml(tr.name)}</div>
-                  <div class="badge-wrap">
-                    <span class="hmbti-badge hmbti-${tr.hmbti}">${tr.hmbti}</span>
-                  </div>
-                  <div class="meta">
-                    <span class="meta-item">📍 ${tr.location}</span>
-                  </div>
-                  <div class="price">
-                    💰 ${tr.price}원/회
-                  </div>
-                  <div class="card-actions">
-                    <button type="button" class="btn-outline">찜하기</button>
-                  </div>
-                </div>
-              </c:when>
-              <c:otherwise>
-                <div class="trainer-row">
-                  <div class="avatar avatar-sm">👤</div>
-                  <div class="row-main">
-                    <div class="row-top">
-                      <div>
-                        <div class="trainer-name-sm">${fn:escapeXml(tr.name)}</div>
-                        <span class="hmbti-badge hmbti-${tr.hmbti}">${tr.hmbti}</span>
-                      </div>
-                      <div class="row-price">💰 ${tr.price}원</div>
-                    </div>
-                    <div class="row-bio">${fn:escapeXml(tr.bio)}</div>
-                    <div class="row-bottom">
-                      <span class="meta-item">📍 ${tr.location}</span>
-                      <button type="button" class="btn-outline btn-sm">찜</button>
-                    </div>
-                  </div>
-                </div>
-              </c:otherwise>
-            </c:choose>
-          </c:forEach>
+         	 <jsp:include page="cardList.jsp">
+			    <jsp:param name="listType" value="popular"/>
+			    <jsp:param name="viewMode" value="${viewMode}"/>
+			  </jsp:include>
         </div>
       </div>
 
@@ -318,50 +282,15 @@
         </h3>
 
         <div class="${viewMode eq 'profile' ? 'trainer-grid' : 'trainer-list'}">
-          <c:forEach var="tr" items="${customizedTrainers}">
-            <%-- 위와 동일한 카드/row 렌더링 재사용 가능(실무에선 include 추천) --%>
-            <c:choose>
-              <c:when test="${viewMode eq 'profile'}">
-                <div class="trainer-card">
-                  <div class="avatar avatar-lg">👤</div>
-                  <div class="trainer-name">${fn:escapeXml(tr.name)}</div>
-                  <div class="badge-wrap">
-                    <span class="hmbti-badge hmbti-${tr.hmbti}">${tr.hmbti}</span>
-                  </div>
-                  <div class="meta">
-                    <span class="meta-item">📍 ${tr.location}</span>
-                  </div>
-                  <div class="price">💰 ${tr.price}원/회</div>
-                  <div class="card-actions">
-                    <button type="button" class="btn-outline">찜하기</button>
-                  </div>
-                </div>
-              </c:when>
-              <c:otherwise>
-                <div class="trainer-row">
-                  <div class="avatar avatar-sm">👤</div>
-                  <div class="row-main">
-                    <div class="row-top">
-                      <div>
-                        <div class="trainer-name-sm">${fn:escapeXml(tr.name)}</div>
-                        <span class="hmbti-badge hmbti-${tr.hmbti}">${tr.hmbti}</span>
-                      </div>
-                      <div class="row-price">💰 ${tr.price}원</div>
-                    </div>
-                    <div class="row-bio">${fn:escapeXml(tr.bio)}</div>
-                    <div class="row-bottom">
-                      <span class="meta-item">📍 ${tr.location}</span>
-                      <button type="button" class="btn-outline btn-sm">찜</button>
-                    </div>
-                  </div>
-                </div>
-              </c:otherwise>
-            </c:choose>
-          </c:forEach>
+         	<jsp:include page="cardList.jsp">
+			    <jsp:param name="listType" value="customized"/>
+			    <jsp:param name="viewMode" value="${viewMode}"/>
+			 </jsp:include>
         </div>
       </div>
     </c:if>
 
+</div>
     <%-- =========================
          검색 결과 섹션(검색/필터 있을 때)
          ========================= --%>
@@ -429,5 +358,18 @@
 	
 </body>
 <script src="<c:url value='/resources/js/trainerFilter.js'/>"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  var form = document.querySelector('.trainer-searchbar');
+  if(!form) return;
+
+  var radios = form.querySelectorAll('input[name="viewMode"]');
+  for (var i = 0; i < radios.length; i++) {
+    radios[i].addEventListener('change', function(){
+      form.submit(); // ✅ 라디오 바꾸면 즉시 GET 요청
+    });
+  }
+});
+</script>
 
 </html>

@@ -1,0 +1,198 @@
+/* =================================================*/
+/* ====== info row ====== */
+.trainer-row{
+  display:flex;
+  align-items:stretch;
+  gap:18px;
+}
+
+.trainer-row__left{
+  width: 120px;                 /* 왼쪽 컬럼 고정 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.trainer-row__avatarWrap{
+  position: relative;
+  width: 96px;
+  height: 96px;
+}
+
+.trainer-row__avatar{
+  width: 96px;
+  height: 96px;
+  border-radius: 999px;
+  background: #E9EDF2;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+.trainer-row__img{ width:100%; height:100%; object-fit:cover; }
+.trainer-row__placeholder-icon{ font-size:28px; opacity:.6; }
+
+/* 가운데 메인 */
+.trainer-row__main{
+  flex: 1;
+  min-width: 0;
+}
+
+.trainer-row__top{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:12px;
+}
+
+.trainer-row__title{
+  display: flex;
+  align-items: center;  /* ✅ 성별이 이름 옆으로 딱 */
+  gap: 10px;
+}
+
+.trainer-row__name{ 
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.2px;
+	}
+
+.trainer-row__chips{
+  display:flex;
+  gap:8px;
+  margin-top:8px;
+}
+
+.gender-pill--inline{
+  height: 22px;
+  padding: 0 10px;
+  border-radius: 999px;
+  border: 1px solid #E4E6EB;
+  font-size: 12px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.trainer-row__price{
+   display:inline-flex;
+  align-items:baseline;
+  gap:0px;
+  font-weight:800;
+  color:#1877F2;
+}
+.trainer-row__priceIcon{ margin-right: 6px; }
+.trainer-row__priceText{ font-size:19px; }
+.trainer-row__priceUnit{ margin-left:0; font-size:18px;} 
+
+.trainer-row__bio{
+  margin-top: 10px;
+  color: #606770;
+  line-height: 1.5;
+}
+
+.trainer-row__bottom{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+}
+
+.trainer-row__actionLine{
+  display:flex;
+  align-items:center;
+  gap:30px;            /* 가격-찜 간격 */
+}
+
+.trainer-row__right{
+  margin-left:auto;
+  position: relative;          /* ✅ regionBadge 기준점 */
+  display:flex;
+  flex-direction:column;
+  align-items:flex-end;
+  justify-content:flex-end;     /* ✅ 하단 고정 */
+  min-width:180px;
+  padding-top:40px;             /* ✅ 위에 지역 뱃지 공간 */
+  padding-bottom: 10px;
+}
+
+.trainer-row__rightTop{
+  display:flex;
+  justify-content:flex-end;
+}
+
+.trainer-row__rightBottom{
+  margin-top:8;     /* 아래로 밀기 */
+}
+
+
+/* ✅ 지역: 이미지 위 왼쪽 상단 고정 */
+.trainer-row__regionBadge{
+  position:absolute;
+  top: 6px;
+  right: 10px;                 /* ✅ 오른쪽 상단 */
+  display:inline-flex;
+  align-items:center;
+  gap: 3px;
+
+  background: transparent;
+  border: 0;
+  padding: 0;
+
+  font-size: 14px;             /* ✅ 텍스트 키우기 */
+  font-weight: 600;
+  color: #4B5563;
+  line-height: 1;
+  z-index: 2;
+}
+
+
+.trainer-row__pinSvg{
+  width: 22px;
+  height: 22px;
+  display: block;
+  
+  fill: none;                  /* ✅ 안 칠함 */
+  stroke: #4B5563;             /* ✅ 선 색 */
+  stroke-width: 2;             /* ✅ 선 두께 */
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.trainer-row__hatiUnder{
+  display: flex;
+  justify-content: center;
+}
+
+.trainer-row__fav{
+  width: 72px;
+  height: 44px;
+  border-radius: 10px;
+  border: 1px solid #E4E6EB;
+  background: #F7F8FA;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.trainer-row__fav-btn{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  height:44px;
+  padding:0 14px;
+  border-radius:10px;
+  border:1px solid var(--border, #E4E6EB);
+  background:#F5F6F7;
+  cursor:pointer;
+}
+
+.trainer-row__fav-icon{ font-size:18px; line-height:1; }
+.trainer-row__fav-text{ font-weight:700; }
+
+.trainer-row__fav-btn.is-active{
+  border-color:#1877F2;
+  background:#EAF2FF;
+  color:#1877F2;
+}
