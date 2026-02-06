@@ -1,3 +1,4 @@
+/* ===== 섹션 / 그리드 ===== */
 .trainer-section-title{
   font-size: 18px;
   font-weight: 700;
@@ -17,9 +18,10 @@
   .trainer-grid{ grid-template-columns: 1fr; }
 }
 
+/* ===== 카드 ===== */
 .trainer-card{
   background: #fff;
-  border: 1px solid var(--border, #E4E6EB);
+  border: 1px solid #E4E6EB;
   border-radius: 14px;
   box-shadow: 0 2px 12px rgba(0,0,0,.06);
   overflow: hidden;
@@ -33,10 +35,11 @@
   position: relative;
 }
 
+/* ===== 아바타 ===== */
 .trainer-card__avatar{
   width: 120px;
   height: 120px;
-  border-radius: 999px;
+  border-radius: 50%;
   background: #E9EDF2;
   display: grid;
   place-items: center;
@@ -55,30 +58,44 @@
   opacity: .55;
 }
 
-.trainer-card__body{
-  width: 100%;
-  text-align: center;
-  padding-top: 25px; /* ✅ meta가 위로 올라가면서 내용 안 겹치게 */
+/* ===== 상단 지역 ===== */
+.trainer-card__region-top{
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #4B5563;
 }
 
-.trainer-card__name{
-  font-size: 18px;
-  font-weight: 700;
-  letter-spacing: -0.2px;
-  
-  margin-top: 1px; 
-  margin-bottom: 6px;
-}
-
-.trainer-card__hati{
-  display: flex;
+.trainer-card__pin{
+  width: 22px;
+  height: 22px;
+  display: inline-flex;
+  align-items: center;
   justify-content: center;
-  margin-bottom: 10px;
+}
+
+.trainer-card__pin-svg{
+  width: 40px;
+  height: 40px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.4;
+}
+
+/* ===== HATI + 성별 ===== */
+.trainer-card__chips{
+  display: flex;
+  gap: 8px;
+  margin: 6px 0 0;
+  justify-content: center;
 }
 
 .hati-pill{
-  display: inline-flex;
-  align-items: center;
   height: 26px;
   padding: 0 10px;
   border-radius: 999px;
@@ -88,171 +105,87 @@
   color: #4F46E5;
 }
 
-.trainer-card__hati{
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-}
-
 .gender-pill{
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
   height: 22px;
   padding: 0 10px;
   border-radius: 999px;
-  border: 1px solid var(--border, #E4E6EB);
-  background: #fff;
+  border: 1px solid #E4E6EB;
   font-size: 12px;
-  color: var(--sub, #606770);
-  line-height: 1;
-}
-
-
-.trainer-card__meta{
-  position: absolute;
-  top: 5px;
-  right: 5px;
-
+  color: #606770;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+}
 
-  /* 보기 좋게 pill 느낌 (원하면 제거 가능) */
-  padding: 6px 10px;
-  border: 1px solid var(--border, #E4E6EB);
-  border-radius: 999px;
-  background: #fff;
+/* ===== 본문 ===== */
+.trainer-card__body{
+  width: 100%;
+  text-align: center;
+  padding-top: 25px;
+}
 
-  font-size: 12px;
-  color: var(--sub, #606770);
-  line-height: 1;
+.trainer-card__name{
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 6px;
 }
 
 .trainer-card__price{
   display: flex;
   justify-content: center;
-  gap: 8px;
-  align-items: baseline;
+  gap: 6px;
   font-weight: 600;
   color: #0B5FFF;
-  margin-top: 10px;
-  margin-bottom: 12px;
-}
-
-.trainer-card__price-icon{
-  font-size: 16px;
-  transform: translateY(1px);
+  margin: 10px 0 12px;
 }
 
 .trainer-card__price-text{
   font-size: 18px;
 }
 
-.trainer-card__fav-btn{
+/* ===== 하단 버튼 ===== */
+.card-actions{
   width: 100%;
-  margin-top: 6px;
-  border: 1px solid var(--border, #E4E6EB);
-  background: #F7F8FA;
-  color: #111;
-  border-radius: 10px;
-  height: 44px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  cursor: pointer;
-  user-select: none;
-}
-
-.trainer-card__fav-btn:hover{
-  background: #F0F2F5;
-}
-
-.trainer-card__fav-btn.is-active{
-  border-color: #0B5FFF;
-  background: #EAF2FF;
-  color: #0B5FFF;
-}
-
-.trainer-card__fav-icon{
-  font-size: 18px;
-  line-height: 1;
-}
-
-.trainer-card__top-tags{
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  z-index: 2;
-}
-
-.trainer-card__chips{
   display: flex;
-  gap: 8px;
-  margin: 6px 0 0px;   /* ← 아바타랑 이름 사이 간격 */
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.fav-btn{
+  flex: 1;
+  height: 44px;
+  border-radius: 12px;
+  border: 1px solid #E4E6EB;
+  background: #F7F8FA;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
   justify-content: center;
+  gap: 8px;
 }
 
-.top-chip{
-  display: inline-flex;
-  align-items: center;
-  height: 22px;
-  padding: 0 10px;
-  border-radius: 999px;
-  border: 1px solid var(--border, #E4E6EB);
-  background: #fff;
-  font-size: 12px;
-  color: var(--sub, #606770);
-  line-height: 1;
-  white-space: nowrap;
+.memo-btn{
+  width: 84px;
+  height: 44px;
+  border-radius: 12px;
+  border: 1px solid #E4E6EB;
+  background: #F7F8FA;
+  font-weight: 700;
+  cursor: pointer;
 }
 
-.top-chip--region{
-  color: #111;
+/* 찜 상태 */
+.fav-icon::before{
+  content: "♡";
+  font-size: 18px;
 }
 
-.top-chip--mix{
-  color: var(--sub, #606770);
+.fav-btn.is-active{
+  border-color: #EF4444;
+  background: #FFF5F5;
+  color: #EF4444;
 }
 
-.hati-pill, .gender-pill{
-  line-height: 1;
-  padding: 0px 10px;   /* padding이 크면 3px 10px 정도로 */
-}
-
-.trainer-card__region-top{
-  position: absolute;
-  top: 2px;
-  right: 2px;
-
-  display: inline-flex;
-  align-items: center;
-  gap: 1px;
-
-  font-size: 14px;
-  font-weight: 600;
-  color: #4B5563;   /* ✅ 더 진하게 */
-  padding: 0;
-  z-index: 2;
-}
-
-.trainer-card__pin{
-  width:22px; 
-  height:22px; 
-  display:inline-flex; 
-  align-items:center; 
-  justify-content:center;
-}
-
-.trainer-card__pin-svg{
-  width:40px; 
-  height:40px; 
-  display:block;
-  fill:none; stroke:currentColor; stroke-width:2.4;
-  stroke-linecap:round; stroke-linejoin:round;
-}
-
-.trainer-card__region-text{
-  line-height: 1;
+.fav-btn.is-active .fav-icon::before{
+  content: "♥";
 }

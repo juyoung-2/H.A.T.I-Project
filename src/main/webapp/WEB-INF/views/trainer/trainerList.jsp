@@ -358,6 +358,7 @@
 	
 </body>
 <script src="<c:url value='/resources/js/trainerFilter.js'/>"></script>
+<script src="<c:url value='/resources/js/trainerFav.js'/>"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function(){
   var form = document.querySelector('.trainer-searchbar');

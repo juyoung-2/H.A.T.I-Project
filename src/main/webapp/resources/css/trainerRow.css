@@ -3,11 +3,12 @@
 .trainer-row{
   display:flex;
   align-items:stretch;
-  gap:18px;
+  gap:10px;
+  position: relative; /* ✅ 추가 */
 }
 
 .trainer-row__left{
-  width: 120px;                 /* 왼쪽 컬럼 고정 */
+  width: 92px;                 /* 왼쪽 컬럼 고정 */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -16,20 +17,23 @@
 
 .trainer-row__avatarWrap{
   position: relative;
-  width: 96px;
-  height: 96px;
+  width: 72px;
+  height: 72px;
 }
 
 .trainer-row__avatar{
-  width: 96px;
-  height: 96px;
+  width: 72px;
+  height: 72px;
   border-radius: 999px;
   background: #E9EDF2;
   display: grid;
   place-items: center;
   overflow: hidden;
 }
-
+/* 3) 안에 있는 아이콘(👤)도 같이 줄이기 */
+.trainer-row__avatarPh{
+  font-size: 22px;   /* 기존 28px이면 22~24 추천 */
+}
 .trainer-row__img{ width:100%; height:100%; object-fit:cover; }
 .trainer-row__placeholder-icon{ font-size:28px; opacity:.6; }
 
@@ -41,19 +45,43 @@
 
 .trainer-row__top{
   display:flex;
-  justify-content:space-between;
-  align-items:flex-start;
-  gap:12px;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.trainer-row__topLine{
+  display:flex;
+  align-items:center;
+  gap:8px;
 }
 
 .trainer-row__title{
   display: flex;
-  align-items: center;  /* ✅ 성별이 이름 옆으로 딱 */
-  gap: 10px;
+  align-items: center;
+  gap: 8px;
 }
 
+.trainer-row__regionInline{
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 4px;
+
+  font-size: 14px;
+  font-weight: 600;
+  color: #4B5563;
+
+  line-height: 1;
+}
+
+.trainer-row__regionText{
+  margin-left: 0px;   /* ⭐ 핵심 */
+}
+
+
 .trainer-row__name{ 
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 700;
   letter-spacing: -0.2px;
 	}
@@ -74,16 +102,30 @@
   align-items: center;
 }
 
-.trainer-row__price{
-   display:inline-flex;
-  align-items:baseline;
-  gap:0px;
-  font-weight:800;
-  color:#1877F2;
+.trainer-row__hatiGender {
+  display: inline-flex;   /* pill들을 옆으로 */
+  gap: 6px;               /* pill 사이 간격 */
+  margin-top: 4px;        /* 이미지 밑 여백 */
 }
+
+.trainer-row__price{
+  position: absolute;
+  top: 12px;     /* ✅ 위아래 위치 */
+  right: 16px;   /* ✅ “끝”으로 붙는 값 (더 끝: 8px, 더 안쪽: 16px) */
+
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0;
+
+  font-weight: 700;
+  color: #1877F2;
+  white-space: nowrap;
+}
+
+
 .trainer-row__priceIcon{ margin-right: 6px; }
-.trainer-row__priceText{ font-size:19px; }
-.trainer-row__priceUnit{ margin-left:0; font-size:18px;} 
+.trainer-row__priceText{ font-size:16px; }
+.trainer-row__priceUnit{ margin-left:0; font-size:16px;} 
 
 .trainer-row__bio{
   margin-top: 10px;
@@ -106,14 +148,13 @@
 
 .trainer-row__right{
   margin-left:auto;
-  position: relative;          /* ✅ regionBadge 기준점 */
+  position: relative;
   display:flex;
   flex-direction:column;
   align-items:flex-end;
-  justify-content:flex-end;     /* ✅ 하단 고정 */
+  justify-content:space-between; /* ✅ 위/아래로 벌려서 고정 */
   min-width:180px;
-  padding-top:40px;             /* ✅ 위에 지역 뱃지 공간 */
-  padding-bottom: 10px;
+  padding: 10px 12px 10px 0;     /* ✅ 위/오른쪽 끝 느낌 */
 }
 
 .trainer-row__rightTop{
@@ -122,35 +163,13 @@
 }
 
 .trainer-row__rightBottom{
-  margin-top:8;     /* 아래로 밀기 */
+  margin-top:8px;     /* 아래로 밀기 */
 }
-
-
-/* ✅ 지역: 이미지 위 왼쪽 상단 고정 */
-.trainer-row__regionBadge{
-  position:absolute;
-  top: 6px;
-  right: 10px;                 /* ✅ 오른쪽 상단 */
-  display:inline-flex;
-  align-items:center;
-  gap: 3px;
-
-  background: transparent;
-  border: 0;
-  padding: 0;
-
-  font-size: 14px;             /* ✅ 텍스트 키우기 */
-  font-weight: 600;
-  color: #4B5563;
-  line-height: 1;
-  z-index: 2;
-}
-
 
 .trainer-row__pinSvg{
   width: 22px;
   height: 22px;
-  display: block;
+  display: inline-block;
   
   fill: none;                  /* ✅ 안 칠함 */
   stroke: #4B5563;             /* ✅ 선 색 */
@@ -161,18 +180,26 @@
 .trainer-row__hatiUnder{
   display: flex;
   justify-content: center;
+  gap: 8px;            /* HATI-성별 간격 */
+  margin-top: 8px;     /* 아바타 아래 여백 (원하면 6px로 더 줄여도 됨) */
+  flex-wrap:nowrap;     /* ✅ 줄바꿈 금지 */
+   align-items: center;
 }
 
 .trainer-row__fav{
-  width: 72px;
-  height: 44px;
+  position: absolute;  /* ✅ 핵심 */
+  right: 12px;
+  bottom: 0px;
+  
+  width: 60px;
+  height: 33px;
   border-radius: 10px;
   border: 1px solid #E4E6EB;
   background: #F7F8FA;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 6px;
   cursor: pointer;
 }
 

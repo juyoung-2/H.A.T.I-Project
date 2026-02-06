@@ -57,15 +57,23 @@
         <span class="trainer-card__price-text">${fn:escapeXml(param.price)}원/회</span>
       </div>
     </div>
+	
+	<div class="card-actions">
+  <button type="button"
+          class="fav-btn ${param.liked == '1' ? 'is-active' : ''}"
+          data-trainer-id="${fn:escapeXml(param.trainerId)}"
+          aria-pressed="${param.liked == '1' ? 'true' : 'false'}">
+    <span class="fav-icon" aria-hidden="true"></span>
+    <span class="fav-text">${param.liked == '1' ? '찜' : '찜하기'}</span>
+  </button>
 
-    <button
-      type="button"
-      class="trainer-card__fav-btn ${param.liked == '1' ? 'is-active' : ''}"
-      data-trainer-id="${fn:escapeXml(param.trainerId)}"
-      aria-pressed="${param.liked == '1' ? 'true' : 'false'}"
-    >
-      <span class="trainer-card__fav-icon">♡</span>
-      <span class="trainer-card__fav-text">찜하기</span>
+  <c:if test="${param.liked == '1'}">
+    <button type="button" class="memo-btn" data-trainer-id="${fn:escapeXml(param.trainerId)}">
+      메모
     </button>
-  </div>
+  </c:if>
+</div>
+	
+	
+</div>
 </div>
