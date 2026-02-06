@@ -69,6 +69,8 @@
   font-size: 14px;
   font-weight: 600;
   color: #4B5563;
+  pointer-events: none;
+  z-index: 1;
 }
 
 .trainer-card__pin{
@@ -80,8 +82,8 @@
 }
 
 .trainer-card__pin-svg{
-  width: 40px;
-  height: 40px;
+  width: 16px;
+  height: 16px;
   fill: none;
   stroke: currentColor;
   stroke-width: 2.4;
@@ -148,6 +150,8 @@
   display: flex;
   gap: 12px;
   margin-top: 18px;
+   position: relative;
+  z-index: 5;
 }
 
 .fav-btn{

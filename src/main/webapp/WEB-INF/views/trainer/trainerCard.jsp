@@ -60,7 +60,7 @@
 	
 	<div class="card-actions">
   <button type="button"
-          class="fav-btn ${param.liked == '1' ? 'is-active' : ''}"
+          class="trainer-card__fav-btn fav-btn ${param.liked == '1' ? 'is-active' : ''}"
           data-trainer-id="${fn:escapeXml(param.trainerId)}"
           aria-pressed="${param.liked == '1' ? 'true' : 'false'}">
     <span class="fav-icon" aria-hidden="true"></span>
