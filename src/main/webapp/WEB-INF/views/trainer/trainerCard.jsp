@@ -67,11 +67,12 @@
     <span class="fav-text">${param.liked == '1' ? '찜' : '찜하기'}</span>
   </button>
 
-  <c:if test="${param.liked == '1'}">
-    <button type="button" class="memo-btn" data-trainer-id="${fn:escapeXml(param.trainerId)}">
-      메모
-    </button>
-  </c:if>
+  <!-- ✅ 항상 렌더링 -->
+  <button type="button"
+          class="memo-btn ${param.liked == '1' ? '' : 'is-hidden'}"
+          data-trainer-id="${fn:escapeXml(param.trainerId)}">
+    	메모
+  </button>
 </div>
 	
 	

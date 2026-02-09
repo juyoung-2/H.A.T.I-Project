@@ -23,6 +23,7 @@
 <link rel="stylesheet" href="<c:url value='/resources/css/trainer_list.css'/>" />
 <link rel="stylesheet" href="<c:url value='/resources/css/trainerCard.css'/>" />
 <link rel="stylesheet" href="<c:url value='/resources/css/trainerRow.css'/>" />
+<link rel="stylesheet" href="<c:url value='/resources/css/trainerMemoModal.css'/>" />
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
@@ -355,6 +356,29 @@
   </div>
 </div>
 	
+	<!-- ✅ Trainer Memo Modal: 여기! (</body> 바로 위) -->
+	<div id="trainerMemoModal" class="memo-modal" aria-hidden="true">
+	  <div class="memo-modal__backdrop" data-memo-close="true"></div>
+	
+	  <div class="memo-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="memoModalTitle">
+	    <div class="memo-modal__header">
+	      <div id="memoModalTitle" class="memo-modal__title">
+	        <span class="memo-modal__trainer-name">트레이너</span> 메모
+	      </div>
+	      <button type="button" class="memo-modal__close" aria-label="닫기" data-memo-close="true">×</button>
+	    </div>
+	
+	    <div class="memo-modal__body">
+	      <textarea id="memoModalTextarea" class="memo-modal__textarea"
+	                placeholder="개인 메모를 작성하세요..."></textarea>
+	    </div>
+	
+	    <div class="memo-modal__footer">
+	      <button type="button" class="memo-modal__btn memo-modal__btn--ghost" data-memo-close="true">취소</button>
+	      <button type="button" id="memoModalSaveBtn" class="memo-modal__btn memo-modal__btn--primary">저장</button>
+	    </div>
+	  </div>
+	</div>
 	
 </body>
 <script src="<c:url value='/resources/js/trainerFilter.js'/>"></script>
